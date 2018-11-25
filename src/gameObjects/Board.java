@@ -1,10 +1,9 @@
 package gameObjects;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.Graphics;
-
-import game.Game;
+import java.awt.Point;
+import java.util.ArrayList;
 
 public class Board extends GameObject {
 
@@ -13,6 +12,7 @@ public class Board extends GameObject {
     private final int yOffset = 25;
 
     private Piece[][] board;
+    private ArrayList<Piece> toRemove;
     private int width;
     private int height;
     private int xDim;
@@ -24,6 +24,7 @@ public class Board extends GameObject {
         height = squareSize * yDim;
         this.xDim = xDim;
         this.yDim = yDim;
+        toRemove = new ArrayList<Piece>();
     }
 
     public void render(Graphics g) {
@@ -35,8 +36,39 @@ public class Board extends GameObject {
             g.drawLine(xOffset + i * squareSize, yOffset, xOffset + i * squareSize, yOffset + height);
     }
 
+    public void update() {
+        print();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                Piece centre = board[i][j];
+                if (centre != null) {
+                    Piece left = null, right = null, above = null, below = null;
+                    if (i > 0)
+                        left = board[i - 1][j];
+                    if (i < board.length - 1)
+                        right = board[i + 1][j];
+                    if (j > 0)
+                        above = board[i][j - 1];
+                    if (j < board[i].length - 1)
+                        below = board[i][j + 1];
+                    if ((left != null && right != null && left.getTeam() != centre.getTeam()
+                            && right.getTeam() != centre.getTeam())
+                            || (above != null && below != null && above.getTeam() != centre.getTeam()
+                                    && below.getTeam() != centre.getTeam())) {
+                        toRemove.add(centre);
+                        removePiece(new Point(i, j));
+                    }
+                }
+            }
+        }
+    }
+
     public void addPiece(Piece piece, Point p) {
         board[p.x][p.y] = piece;
+    }
+
+    public void removePiece(Point p) {
+        board[p.x][p.y] = null;
     }
 
     public int squareSize() {
@@ -48,7 +80,7 @@ public class Board extends GameObject {
     }
 
     /**
-     * Returns the index of the square at the given point
+     * Returns the index of the square at the given point on the board
      * 
      * @param x
      *            X coordinate
@@ -69,6 +101,13 @@ public class Board extends GameObject {
         return (p.x > xOffset && p.x < width + xOffset && p.y > yOffset && p.y < height + yOffset);
     }
 
+    public ArrayList<Piece> toRemove() {
+        ArrayList out = (ArrayList<Piece>) toRemove.clone();
+        toRemove.clear();
+        return out;
+
+    }
+
     public Piece pieceAt(int x, int y) {
         return board[x][y];
     }
@@ -87,6 +126,20 @@ public class Board extends GameObject {
 
     public int getSquareSize() {
         return squareSize;
+    }
+
+    private void print() {
+        for (int y = 0; y < board[0].length; y++) {
+            for (int x = 0; x < board.length; x++) {
+                if (board[x][y] == null)
+                    System.out.print(" 0 ");
+                else if (board[x][y].getTeam() == 1)
+                    System.out.print(" 1 ");
+                else
+                    System.out.print(" 2 ");
+            }
+            System.out.println();
+        }
     }
 
 }

@@ -3,6 +3,7 @@ package game;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferStrategy;
 
 import gameObjects.Board;
@@ -29,7 +30,7 @@ public class Game extends Canvas implements Runnable {
         input.setHandler(handler);
         this.addKeyListener(input);
         this.addMouseListener(input);
-        Level.startLevel(this, 5, 5, 3);
+        Level.startLevel(this, 5, 5, 4);
     }
 
     public static void main(String[] args) {

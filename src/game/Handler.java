@@ -13,9 +13,11 @@ public class Handler {
 
     private LinkedList<GameObject> objects;
     private Board board;
+    private Piece selected;
     private Input input;
     private boolean addPiece;
     private boolean selectPiece;
+    private boolean movePiece;
     private MouseEvent lastClick;
 
     public Handler(Input input) {
@@ -30,17 +32,27 @@ public class Handler {
     }
 
     public void updateObjects() {
+        //adds a piece
         if (Level.getPhase() == 0 && addPiece) {
-            Piece piece = new Piece(board, Level.whoPlaces(), board.squareAtLocation(lastClick.getPoint()));
+            Piece piece = new Piece(board, Level.getTurn(), board.squareAtLocation(lastClick.getPoint()));
             add(piece);
             board.addPiece(piece, piece.getPoint());
-            Level.added(Level.whoPlaces());
+            Level.added(Level.getTurn());
             addPiece = false;
         }
+        // selects a piece
         if (Level.getPhase() > 0 && selectPiece) {
-            board.pieceAt(board.locationOfSquare(lastClick.getPoint())).select();
+            if (selected != null)
+                selected.deselect();
+            selected = board.pieceAt(board.squareAtLocation(lastClick.getPoint()));
+            selected.select();
             selectPiece = false;
-            
+        }
+        // moves a piece
+        if (Level.getPhase() > 0 && movePiece) {
+            selected.move(board.squareAtLocation(lastClick.getPoint()));
+            movePiece = false;
+            endTurn();
         }
     }
 
@@ -51,10 +63,31 @@ public class Handler {
 
     }
     
+    public void endTurn() {
+        board.update();
+        objects.removeAll(board.toRemove());
+        selected.deselect();
+        selected = null;
+        Level.nextTurn();
+    }
+
     public void selectPiece(MouseEvent e) {
-        if (board.pieceAt(e.getPoint()) != null) {
+        Point clicked = board.squareAtLocation(e.getPoint());
+        if (board.pieceAt(clicked) != null && board.pieceAt(clicked).getTeam() == Level.getTurn()) {
             selectPiece = true;
             lastClick = e;
+        }
+        if (selected != null) {
+            boolean valid = false;
+            for (Point p : selected.moves()) {
+                if (p != null && p.equals(clicked))
+                    valid = true;
+            }
+            if (valid) {
+                movePiece = true;
+                lastClick = e;
+            }
+
         }
     }
 

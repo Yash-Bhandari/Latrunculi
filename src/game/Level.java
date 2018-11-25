@@ -14,6 +14,7 @@ public class Level {
     private static int numB;
     private static int numPieces;
     private static int phase = 0;
+    private static int turn;
 
     public static void startLevel(Game game, int boardX, int BoardY, int numPieces) {
         Level.game = game;
@@ -21,6 +22,7 @@ public class Level {
         Level.numPieces = numPieces;
         Board b = new Board(5, 5);
         handler.add(b);
+        turn = 1;
     }
 
     public static void added(int team) {
@@ -28,21 +30,23 @@ public class Level {
             numR++;
         else
             numB++;
-        if (numR == numPieces && numB == numPieces)
+        nextTurn();
+        if (numR == numPieces && numB == numPieces) {
             phase++;
-    }
-
-    public static int whoPlaces() {
-        if (phase == 0) {
-            if (numR == numB)
-                return 1;
-            return 2;
+            turn = 1;
         }
-        return 0;
     }
 
+    public static void nextTurn() {
+        if (turn == 2) turn = 1;
+        else turn = 2;
+    }
     public static int getPhase() {
         return phase;
+    }
+    
+    public static int getTurn() {
+        return turn;
     }
 
 }
