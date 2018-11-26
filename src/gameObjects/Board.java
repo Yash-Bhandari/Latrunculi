@@ -40,9 +40,13 @@ public class Board extends GameObject {
 
     /**
      * Draws a preview of a piece at the given location on the screen
-     * @param g Graphics context
-     * @param p Coordinates on the screen
-     * @param team Team the piece is on
+     * 
+     * @param g
+     *            Graphics context
+     * @param p
+     *            Coordinates on the screen
+     * @param team
+     *            Team the piece is on
      */
     public void renderPreview(Graphics g, Point p, int team) {
         if (within(p)) {
@@ -59,10 +63,6 @@ public class Board extends GameObject {
     public void update(Point moved) {
         print();
         Point p = moved;
-        if (flanked(p.x, p.y)) {
-            toRemove.add(pieceAt(p));
-            removePiece(p);
-        }
         if ((p = left(moved)) != null && flanked(p.x, p.y)) {
             toRemove.add(pieceAt(p));
             removePiece(p);
@@ -79,10 +79,10 @@ public class Board extends GameObject {
             toRemove.add(pieceAt(p));
             removePiece(p);
         }
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                flanked(i, j);
-            }
+        p = moved;
+        if (flanked(p.x, p.y)) {
+            toRemove.add(pieceAt(p));
+            removePiece(p);
         }
     }
 
@@ -123,14 +123,18 @@ public class Board extends GameObject {
     }
 
     public void addPiece(Piece piece, Point p) {
-        if (piece.getTeam() == 1) numRed++;
-        if (piece.getTeam() == 2) numBlue++;
+        if (piece.getTeam() == 1)
+            numRed++;
+        if (piece.getTeam() == 2)
+            numBlue++;
         board[p.x][p.y] = piece;
     }
 
     public void removePiece(Point p) {
-        if (board[p.x][p.y].getTeam() == 1) numRed--;
-        if (board[p.x][p.y].getTeam() == 2) numBlue--;
+        if (board[p.x][p.y].getTeam() == 1)
+            numRed--;
+        if (board[p.x][p.y].getTeam() == 2)
+            numBlue--;
         board[p.x][p.y] = null;
     }
 
@@ -166,13 +170,13 @@ public class Board extends GameObject {
         return out;
 
     }
-    
+
     public void clear() {
         board = new Piece[XDIM][YDIM];
         numRed = 0;
         numBlue = 0;
     }
-    
+
     public Piece pieceAt(int x, int y) {
         return board[x][y];
     }
@@ -192,15 +196,15 @@ public class Board extends GameObject {
     public int getSquareSize() {
         return SQUARESIZE;
     }
-    
+
     public int numRed() {
         return numRed;
     }
-    
+
     public int numBlue() {
         return numBlue;
     }
-    
+
     public int SQUARESIZE() {
         return SQUARESIZE;
     }

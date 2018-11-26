@@ -61,10 +61,13 @@ public class Level {
     public static void drawWin(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(250, 325, 301, 101);
+        g.fillRect(260, 500, 280, 50);
         String winner = Level.getWinner() == 1 ? "RED" : "BLUE"; 
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
         g.setColor(Color.white);
         g.drawString(winner + " WINS!", 250, 393);
+        //g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        //g.drawString("PRESS SPACE TO RESET", 260, 500);
     }
 
     public static int getPhase() {

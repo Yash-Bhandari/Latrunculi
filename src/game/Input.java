@@ -52,16 +52,7 @@ public class Input implements KeyListener, MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        if (Level.getPhase() == 0) {
-            if (handler.getBoard().within(e.getPoint())) {
-                handler.addPiece(e);
-            }
-        }
-        if (Level.getPhase() == 1) {
-            if (handler.getBoard().within(e.getPoint())) {
-                handler.selectPiece(e);
-            }
-        }
+
     }
 
     @Override
@@ -78,7 +69,16 @@ public class Input implements KeyListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
+        if (Level.getPhase() == 0) {
+            if (handler.getBoard().within(e.getPoint())) {
+                handler.addPiece(e);
+            }
+        }
+        if (Level.getPhase() == 1) {
+            if (handler.getBoard().within(e.getPoint())) {
+                handler.selectPiece(e);
+            }
+        }
 
     }
 
