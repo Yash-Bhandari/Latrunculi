@@ -7,33 +7,35 @@ import java.util.ArrayList;
 
 public class Board extends GameObject {
 
-    private final int squareSize = 100;
-    private final int xOffset = 50;
-    private final int yOffset = 25;
+    private final int SQUARESIZE = 100;
+    private final int XOFFSET = 50;
+    private final int YOFFSET = 25;
+    private final int WIDTH;
+    private final int HEIGHT;
+    private final int XDIM;
+    private final int YDIM;
 
     private Piece[][] board;
     private ArrayList<Piece> toRemove;
-    private int width;
-    private int height;
-    private int xDim;
-    private int yDim;
+    private int numRed = 0;
+    private int numBlue = 0;
 
-    public Board(int xDim, int yDim) {
-        board = new Piece[xDim][yDim];
-        width = squareSize * xDim;
-        height = squareSize * yDim;
-        this.xDim = xDim;
-        this.yDim = yDim;
+    public Board(int XDIM, int YDIM) {
+        board = new Piece[XDIM][YDIM];
+        WIDTH = SQUARESIZE * XDIM;
+        HEIGHT = SQUARESIZE * YDIM;
+        this.XDIM = XDIM;
+        this.YDIM = YDIM;
         toRemove = new ArrayList<Piece>();
     }
 
     public void render(Graphics g) {
         g.setColor(Color.white);
-        g.drawRect(50, 25, width, height);
-        for (int i = 0; i < yDim; i++)
-            g.drawLine(xOffset, yOffset + i * squareSize, xOffset + width, yOffset + i * squareSize);
-        for (int i = 0; i < xDim; i++)
-            g.drawLine(xOffset + i * squareSize, yOffset, xOffset + i * squareSize, yOffset + height);
+        g.drawRect(50, 25, WIDTH, HEIGHT);
+        for (int i = 0; i < YDIM; i++)
+            g.drawLine(XOFFSET, YOFFSET + i * SQUARESIZE, XOFFSET + WIDTH, YOFFSET + i * SQUARESIZE);
+        for (int i = 0; i < XDIM; i++)
+            g.drawLine(XOFFSET + i * SQUARESIZE, YOFFSET, XOFFSET + i * SQUARESIZE, YOFFSET + HEIGHT);
     }
 
     /**
@@ -108,32 +110,32 @@ public class Board extends GameObject {
             if (x == 0 && centre.isEnemy(right) && (centre.isEnemy(above) || centre.isEnemy(below)))
                 return true;
             // on right edge with two enemies around
-            if (x == xDim - 1 && centre.isEnemy(left) && (centre.isEnemy(above) || centre.isEnemy(below)))
+            if (x == XDIM - 1 && centre.isEnemy(left) && (centre.isEnemy(above) || centre.isEnemy(below)))
                 return true;
             // on top edge with two enemies around
             if (y == 0 && centre.isEnemy(below) && (centre.isEnemy(left) || centre.isEnemy(right)))
                 return true;
             // on bottom edge with two enemies around
-            if (x == yDim - 1 && centre.isEnemy(above) && (centre.isEnemy(left) || centre.isEnemy(right)))
+            if (x == YDIM - 1 && centre.isEnemy(above) && (centre.isEnemy(left) || centre.isEnemy(right)))
                 return true;
         }
         return false;
     }
 
     public void addPiece(Piece piece, Point p) {
+        if (piece.getTeam() == 1) numRed++;
+        if (piece.getTeam() == 2) numBlue++;
         board[p.x][p.y] = piece;
     }
 
     public void removePiece(Point p) {
+        if (board[p.x][p.y].getTeam() == 1) numRed--;
+        if (board[p.x][p.y].getTeam() == 2) numBlue--;
         board[p.x][p.y] = null;
     }
 
-    public int squareSize() {
-        return squareSize;
-    }
-
     public Point locationOfSquare(Point p) {
-        return new Point(xOffset + p.x * squareSize, yOffset + p.y * squareSize);
+        return new Point(XOFFSET + p.x * SQUARESIZE, YOFFSET + p.y * SQUARESIZE);
     }
 
     /**
@@ -147,15 +149,15 @@ public class Board extends GameObject {
      */
     public Point squareAtLocation(Point p) {
         if (within(p)) {
-            int x = (p.x - xOffset) / squareSize;
-            int y = (p.y - yOffset) / squareSize;
+            int x = (p.x - XOFFSET) / SQUARESIZE;
+            int y = (p.y - YOFFSET) / SQUARESIZE;
             return new Point(x, y);
         }
         return null;
     }
 
     public boolean within(Point p) {
-        return (p.x > xOffset && p.x < width + xOffset && p.y > yOffset && p.y < height + yOffset);
+        return (p.x > XOFFSET && p.x < WIDTH + XOFFSET && p.y > YOFFSET && p.y < HEIGHT + YOFFSET);
     }
 
     public ArrayList<Piece> toRemove() {
@@ -164,7 +166,13 @@ public class Board extends GameObject {
         return out;
 
     }
-
+    
+    public void clear() {
+        board = new Piece[XDIM][YDIM];
+        numRed = 0;
+        numBlue = 0;
+    }
+    
     public Piece pieceAt(int x, int y) {
         return board[x][y];
     }
@@ -174,15 +182,27 @@ public class Board extends GameObject {
     }
 
     public int getxDim() {
-        return xDim;
+        return XDIM;
     }
 
     public int getyDim() {
-        return yDim;
+        return YDIM;
     }
 
     public int getSquareSize() {
-        return squareSize;
+        return SQUARESIZE;
+    }
+    
+    public int numRed() {
+        return numRed;
+    }
+    
+    public int numBlue() {
+        return numBlue;
+    }
+    
+    public int SQUARESIZE() {
+        return SQUARESIZE;
     }
 
     private void print() {
@@ -219,7 +239,7 @@ public class Board extends GameObject {
      * @return Point to the left, null if on right edge
      */
     private Point right(Point p) {
-        if (p.x >= xDim - 1)
+        if (p.x >= XDIM - 1)
             return null;
         return new Point(p.x + 1, p.y);
     }
@@ -243,7 +263,7 @@ public class Board extends GameObject {
      * @return Point to the left, null if on bottom edge
      */
     private Point below(Point p) {
-        if (p.y >= yDim - 1)
+        if (p.y >= YDIM - 1)
             return null;
         return new Point(p.x, p.y + 1);
     }

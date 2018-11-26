@@ -1,7 +1,10 @@
 package game;
 
-import java.awt.Point;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.font.*;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
@@ -75,7 +78,9 @@ public class Handler {
         for (GameObject go : objects) {
             go.render(g);
         }
-
+        if (Level.getPhase() == 2) {
+            Level.drawWin(g);
+        }
     }
 
     public void endTurn() {
@@ -111,9 +116,11 @@ public class Handler {
             lastClick = e;
         }
     }
-
+    
     public void clear() {
+        board = new Board(board.getxDim(), board.getyDim());
         objects.clear();
+        add(board);
     }
 
     public Board getBoard() {

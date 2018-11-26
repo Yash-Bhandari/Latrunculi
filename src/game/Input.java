@@ -9,7 +9,6 @@ import java.awt.event.MouseListener;
 
 public class Input implements KeyListener, MouseListener {
 
-    public boolean[] keys = new boolean[5];
     private Handler handler;
     private Game game;
 
@@ -39,17 +38,8 @@ public class Input implements KeyListener, MouseListener {
     // sets index in keys[] corresponding to KeyEvent e to boolean a
     private void adjust(KeyEvent e, boolean a) {
         switch (e.getKeyCode()) {
-        case KeyEvent.VK_W:
-            keys[0] = a;
-            break;
-        case KeyEvent.VK_S:
-            keys[1] = a;
-            break;
-        case KeyEvent.VK_A:
-            keys[2] = a;
-            break;
-        case KeyEvent.VK_D:
-            keys[3] = a;
+        case KeyEvent.VK_SPACE:
+            if(Level.getPhase() == 2) Level.restart();
             break;
         }
 
