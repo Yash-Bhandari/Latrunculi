@@ -32,39 +32,53 @@ public class Handler {
     }
 
     public void updateObjects() {
-        //adds a piece
-        if (Level.getPhase() == 0 && addPiece) {
-            Piece piece = new Piece(board, Level.getTurn(), board.squareAtLocation(lastClick.getPoint()));
-            add(piece);
-            board.addPiece(piece, piece.getPoint());
-            Level.added(Level.getTurn());
-            addPiece = false;
+
+        // piece placing phase
+        if (Level.getPhase() == 0) {
+            // adds a piece
+            if (addPiece) {
+                Piece piece = new Piece(board, Level.getTurn(), board.squareAtLocation(lastClick.getPoint()));
+                add(piece);
+                board.addPiece(piece, piece.getPoint());
+                Level.added(Level.getTurn());
+                addPiece = false;
+            }
         }
+
         // selects a piece
         if (Level.getPhase() > 0 && selectPiece) {
-            if (selected != null)
+            if (selected != null && selected == board.pieceAt(board.squareAtLocation(lastClick.getPoint()))) {
                 selected.deselect();
-            selected = board.pieceAt(board.squareAtLocation(lastClick.getPoint()));
-            selected.select();
+                selected = null;
+            } else {
+                if (selected != null || selected == board.pieceAt(board.squareAtLocation(lastClick.getPoint()))) {
+                    selected.deselect();
+                    selected = null;
+                }
+                selected = board.pieceAt(board.squareAtLocation(lastClick.getPoint()));
+                selected.select();
+            }
             selectPiece = false;
         }
         // moves a piece
         if (Level.getPhase() > 0 && movePiece) {
             selected.move(board.squareAtLocation(lastClick.getPoint()));
+            board.update(board.squareAtLocation(lastClick.getPoint()));
             movePiece = false;
             endTurn();
         }
     }
 
     public void renderObjects(Graphics g) {
+        if (Level.getPhase() == 0)
+            board.renderPreview(g, input.mouseLocation(), Level.getTurn());
         for (GameObject go : objects) {
             go.render(g);
         }
 
     }
-    
+
     public void endTurn() {
-        board.update();
         objects.removeAll(board.toRemove());
         selected.deselect();
         selected = null;

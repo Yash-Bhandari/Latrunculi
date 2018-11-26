@@ -13,8 +13,8 @@ public class Game extends Canvas implements Runnable {
 
     private static final long serialVersionUID = 3119695923651282663L;
 
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 800;
 
     private Thread thread;
     private boolean running = false;
@@ -25,12 +25,12 @@ public class Game extends Canvas implements Runnable {
 
     public Game() {
         new Panel(WIDTH, HEIGHT, "Paint", this);
-        input = new Input();
+        input = new Input(this);
         handler = new Handler(input);
         input.setHandler(handler);
         this.addKeyListener(input);
         this.addMouseListener(input);
-        Level.startLevel(this, 5, 5, 4);
+        Level.startLevel(this, 7, 7, 2);
     }
 
     public static void main(String[] args) {

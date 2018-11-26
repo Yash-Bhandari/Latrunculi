@@ -19,10 +19,7 @@ public class Piece extends GameObject {
     }
 
     public void render(Graphics g) {
-        if (team == 1)
-            g.setColor(Color.red);
-        if (team == 2)
-            g.setColor(Color.blue);
+        g.setColor(team == 1 ? Color.red : Color.blue);
         g.fillOval(board.locationOfSquare(point).x, board.locationOfSquare(point).y, board.getSquareSize(),
                 board.getSquareSize());
         if (selected)
@@ -41,12 +38,13 @@ public class Piece extends GameObject {
             }
         }
     }
-    
-    //moves piece to given point
+
+    // moves piece to given point
     public void move(Point p) {
         board.removePiece(point);
         board.addPiece(this, p);
         point = p;
+        board.update(point);
         moves();
     }
 
@@ -72,17 +70,28 @@ public class Piece extends GameObject {
     public void deselect() {
         selected = false;
     }
-    
+
+    /**
+     * Returns true if given piece is an enemy
+     * 
+     * @param piece
+     *            Piece to be tested
+     * @return true if it's an enemy, false if it's allied or null
+     */
+    public boolean isEnemy(Piece piece) {
+        return piece == null ? false : piece.team != this.team;
+    }
+
     private void remove() {
         inPlay = false;
     }
-    
+
     public Point getPoint() {
         return point;
     }
-    
+
     public int getTeam() {
         return team;
     }
-    
+
 }

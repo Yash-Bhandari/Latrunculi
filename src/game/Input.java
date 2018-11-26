@@ -1,16 +1,21 @@
 package game;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import gameObjects.Piece;
-
 public class Input implements KeyListener, MouseListener {
 
     public boolean[] keys = new boolean[5];
     private Handler handler;
+    private Game game;
+
+    public Input(Game game) {
+        this.game = game;
+    }
 
     public void setHandler(Handler handler) {
         this.handler = handler;
@@ -48,6 +53,12 @@ public class Input implements KeyListener, MouseListener {
             break;
         }
 
+    }
+
+    public Point mouseLocation() {
+        Point a = MouseInfo.getPointerInfo().getLocation();
+        Point b = game.getLocationOnScreen();
+        return new Point(a.x - b.x, a.y - b.y);
     }
 
     public void mouseClicked(MouseEvent e) {

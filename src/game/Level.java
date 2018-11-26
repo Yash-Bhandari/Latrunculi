@@ -13,16 +13,17 @@ public class Level {
     private static int numR;
     private static int numB;
     private static int numPieces;
-    private static int phase = 0;
+    private static int phase = -1;
     private static int turn;
 
-    public static void startLevel(Game game, int boardX, int BoardY, int numPieces) {
+    public static void startLevel(Game game, int boardX, int boardY, int numPieces) {
         Level.game = game;
         Level.handler = game.handler;
         Level.numPieces = numPieces;
-        Board b = new Board(5, 5);
+        Board b = new Board(boardX, boardY);
         handler.add(b);
         turn = 1;
+        phase = 0;
     }
 
     public static void added(int team) {

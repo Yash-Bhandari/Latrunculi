@@ -36,31 +36,88 @@ public class Board extends GameObject {
             g.drawLine(xOffset + i * squareSize, yOffset, xOffset + i * squareSize, yOffset + height);
     }
 
-    public void update() {
+    /**
+     * Draws a preview of a piece at the given location on the screen
+     * @param g Graphics context
+     * @param p Coordinates on the screen
+     * @param team Team the piece is on
+     */
+    public void renderPreview(Graphics g, Point p, int team) {
+        if (within(p)) {
+            g.setColor(team == 1 ? Color.red : Color.blue);
+            p = squareAtLocation(p);
+            p = locationOfSquare(p);
+            p.x += getSquareSize() / 4;
+            p.y += getSquareSize() / 4;
+            g.fillOval(p.x, p.y, getSquareSize() / 2, getSquareSize() / 2);
+        }
+
+    }
+
+    public void update(Point moved) {
         print();
+        Point p = moved;
+        if (flanked(p.x, p.y)) {
+            toRemove.add(pieceAt(p));
+            removePiece(p);
+        }
+        if ((p = left(moved)) != null && flanked(p.x, p.y)) {
+            toRemove.add(pieceAt(p));
+            removePiece(p);
+        }
+        if ((p = right(moved)) != null && flanked(p.x, p.y)) {
+            toRemove.add(pieceAt(p));
+            removePiece(p);
+        }
+        if ((p = above(moved)) != null && flanked(p.x, p.y)) {
+            toRemove.add(pieceAt(p));
+            removePiece(p);
+        }
+        if ((p = below(moved)) != null && flanked(p.x, p.y)) {
+            toRemove.add(pieceAt(p));
+            removePiece(p);
+        }
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                Piece centre = board[i][j];
-                if (centre != null) {
-                    Piece left = null, right = null, above = null, below = null;
-                    if (i > 0)
-                        left = board[i - 1][j];
-                    if (i < board.length - 1)
-                        right = board[i + 1][j];
-                    if (j > 0)
-                        above = board[i][j - 1];
-                    if (j < board[i].length - 1)
-                        below = board[i][j + 1];
-                    if ((left != null && right != null && left.getTeam() != centre.getTeam()
-                            && right.getTeam() != centre.getTeam())
-                            || (above != null && below != null && above.getTeam() != centre.getTeam()
-                                    && below.getTeam() != centre.getTeam())) {
-                        toRemove.add(centre);
-                        removePiece(new Point(i, j));
-                    }
-                }
+                flanked(i, j);
             }
         }
+    }
+
+    // returns true if a piece is to be destroyed
+    public boolean flanked(int x, int y) {
+        Piece centre = board[x][y];
+        if (centre != null) {
+            Piece left = null, right = null, above = null, below = null;
+            if (x > 0)
+                left = board[x - 1][y];
+            if (x < board.length - 1)
+                right = board[x + 1][y];
+            if (y > 0)
+                above = board[x][y - 1];
+            if (y < board[y].length - 1)
+                below = board[x][y + 1];
+
+            // enemy left and right
+            if (centre.isEnemy(left) && centre.isEnemy(right))
+                return true;
+            // enemy above and below
+            if (centre.isEnemy(above) && centre.isEnemy(below))
+                return true;
+            // on left edge with two enemies around
+            if (x == 0 && centre.isEnemy(right) && (centre.isEnemy(above) || centre.isEnemy(below)))
+                return true;
+            // on right edge with two enemies around
+            if (x == xDim - 1 && centre.isEnemy(left) && (centre.isEnemy(above) || centre.isEnemy(below)))
+                return true;
+            // on top edge with two enemies around
+            if (y == 0 && centre.isEnemy(below) && (centre.isEnemy(left) || centre.isEnemy(right)))
+                return true;
+            // on bottom edge with two enemies around
+            if (x == yDim - 1 && centre.isEnemy(above) && (centre.isEnemy(left) || centre.isEnemy(right)))
+                return true;
+        }
+        return false;
     }
 
     public void addPiece(Piece piece, Point p) {
@@ -140,6 +197,54 @@ public class Board extends GameObject {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
+    /**
+     * Returns coordinates of point to the left of p
+     * 
+     * @param p
+     * @return Point to the left, null if on left edge
+     */
+    private Point left(Point p) {
+        if (p.x <= 0)
+            return null;
+        return new Point(p.x - 1, p.y);
+    }
+
+    /**
+     * Returns coordinates of point to the right of p
+     * 
+     * @param p
+     * @return Point to the left, null if on right edge
+     */
+    private Point right(Point p) {
+        if (p.x >= xDim - 1)
+            return null;
+        return new Point(p.x + 1, p.y);
+    }
+
+    /**
+     * Returns coordinates of point above p
+     * 
+     * @param p
+     * @return Point to the left, null if on top edge
+     */
+    private Point above(Point p) {
+        if (p.y <= 0)
+            return null;
+        return new Point(p.x, p.y - 1);
+    }
+
+    /**
+     * Returns coordinates of point below p
+     * 
+     * @param p
+     * @return Point to the left, null if on bottom edge
+     */
+    private Point below(Point p) {
+        if (p.y >= yDim - 1)
+            return null;
+        return new Point(p.x, p.y + 1);
+    }
 }
