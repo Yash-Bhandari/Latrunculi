@@ -11,6 +11,7 @@ public class Level {
     private static Game game;
     private static Handler handler;
     private boolean setup = true;
+    private static boolean moveAgain = false;
     private static int numPieces;
     private static int phase = -1;
     private static int turn;
@@ -26,7 +27,7 @@ public class Level {
         turn = 1;
         winner = 0;
     }
-    
+
     public static void restart() {
         handler.clear();
         phase = 0;
@@ -52,22 +53,37 @@ public class Level {
                 winner = 1;
             }
         }
-        if (turn == 2)
-            turn = 1;
-        else
-            turn = 2;
+        if (!moveAgain()) {
+            if (turn == 2)
+                turn = 1;
+            else
+                turn = 2;
+        }
+        moveAgain = false;
+    }
+
+    public static void tookPiece() {
+        moveAgain = true;
     }
     
+    public static void noTake() {
+        moveAgain = false;
+    }
+
     public static void drawWin(Graphics g) {
         g.setColor(Color.black);
         g.fillRect(250, 325, 301, 101);
         g.fillRect(260, 500, 280, 50);
-        String winner = Level.getWinner() == 1 ? "RED" : "BLUE"; 
+        String winner = Level.getWinner() == 1 ? "RED" : "BLUE";
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
         g.setColor(Color.white);
         g.drawString(winner + " WINS!", 250, 393);
-        //g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
-        //g.drawString("PRESS SPACE TO RESET", 260, 500);
+        // g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        // g.drawString("PRESS SPACE TO RESET", 260, 500);
+    }
+
+    public static boolean moveAgain() {
+        return moveAgain;
     }
 
     public static int getPhase() {
@@ -77,7 +93,7 @@ public class Level {
     public static int getTurn() {
         return turn;
     }
-    
+
     public static int getWinner() {
         return winner;
     }

@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable {
         input.setHandler(handler);
         this.addKeyListener(input);
         this.addMouseListener(input);
-        Level.startLevel(this, 7, 7, 6);
+        Level.startLevel(this, 7, 7, 3);
     }
 
     public static void main(String[] args) {

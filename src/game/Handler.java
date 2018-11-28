@@ -18,6 +18,7 @@ public class Handler {
     private Board board;
     private Piece selected;
     private Input input;
+    private boolean canDeselect;
     private boolean addPiece;
     private boolean selectPiece;
     private boolean movePiece;
@@ -49,7 +50,7 @@ public class Handler {
         }
 
         // selects a piece
-        if (Level.getPhase() > 0 && selectPiece) {
+        if (Level.getPhase() == 1 && selectPiece && !Level.moveAgain()) {
             if (selected != null && selected == board.pieceAt(board.squareAtLocation(lastClick.getPoint()))) {
                 selected.deselect();
                 selected = null;
@@ -63,10 +64,14 @@ public class Handler {
             }
             selectPiece = false;
         }
+
         // moves a piece
-        if (Level.getPhase() > 0 && movePiece) {
+        if (Level.getPhase() == 1 && movePiece) {
             selected.move(board.squareAtLocation(lastClick.getPoint()));
-            board.update(board.squareAtLocation(lastClick.getPoint()));
+            if (board.update(board.squareAtLocation(lastClick.getPoint()))) {
+                Level.tookPiece();
+            } else
+                Level.noTake();
             movePiece = false;
             endTurn();
         }
@@ -85,8 +90,10 @@ public class Handler {
 
     public void endTurn() {
         objects.removeAll(board.toRemove());
-        selected.deselect();
-        selected = null;
+        if (!Level.moveAgain()) {
+            selected.deselect();
+            selected = null;
+        }
         Level.nextTurn();
     }
 
@@ -116,7 +123,7 @@ public class Handler {
             lastClick = e;
         }
     }
-    
+
     public void clear() {
         board = new Board(board.getxDim(), board.getyDim());
         objects.clear();

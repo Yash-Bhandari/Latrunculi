@@ -60,30 +60,32 @@ public class Board extends GameObject {
 
     }
 
-    public void update(Point moved) {
+    public boolean update(Point moved) {
         print();
         Point p = moved;
+        boolean taken = false;
         if ((p = left(moved)) != null && flanked(p.x, p.y)) {
             toRemove.add(pieceAt(p));
             removePiece(p);
+            taken = true;
         }
         if ((p = right(moved)) != null && flanked(p.x, p.y)) {
             toRemove.add(pieceAt(p));
             removePiece(p);
+            taken = true;
         }
         if ((p = above(moved)) != null && flanked(p.x, p.y)) {
             toRemove.add(pieceAt(p));
             removePiece(p);
+            taken = true;
         }
         if ((p = below(moved)) != null && flanked(p.x, p.y)) {
             toRemove.add(pieceAt(p));
             removePiece(p);
+            taken = true;
         }
-        p = moved;
-        if (flanked(p.x, p.y)) {
-            toRemove.add(pieceAt(p));
-            removePiece(p);
-        }
+        System.out.println(taken);
+        return taken;
     }
 
     // returns true if a piece is to be destroyed
