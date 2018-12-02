@@ -46,10 +46,10 @@ public class Level {
 
 	public static void nextTurn() {
 		if (phase == 1) {
-			if (handler.getBoard().numRed() == 0) {
+			if (handler.getBoard().numRed() == 1) {
 				phase = 2;
 				winner = 2;
-			} else if (handler.getBoard().numBlue() == 0) {
+			} else if (handler.getBoard().numBlue() == 1) {
 				phase = 2;
 				winner = 1;
 			}
@@ -60,21 +60,22 @@ public class Level {
 			else
 				turn = 2;
 		}
-		moveAgain = false;
 	}
 
 	public static void tookPiece() {
-		moveAgain = true;
+	    System.out.println("we didi t");
+	    moveAgain = true;
 	}
 
 	public static void noTake() {
+	    System.out.println("you bitch");
 		moveAgain = false;
 	}
 
 	public static void drawWin(Graphics g) {
 		g.setColor(Color.black);
 		g.fillRect(250, 325, 301, 101);
-		g.fillRect(260, 500, 280, 50);
+		//g.fillRect(260, 500, 280, 50);
 		String winner = Level.getWinner() == 1 ? "RED" : "BLUE";
 		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
 		g.setColor(Color.white);

@@ -70,7 +70,8 @@ public class Handler {
 		// moves a piece
 		if (Level.getPhase() == 1 && movePiece) {
 			selected.move(board.squareAtLocation(lastClick.getPoint()));
-			if (board.update(board.squareAtLocation(lastClick.getPoint()))) {
+			if (board.update(board.squareAtLocation(lastClick.getPoint())) > 0) {
+			    System.out.println("we're doing it");
 				Level.tookPiece();
 			} else
 				Level.noTake();
@@ -95,6 +96,8 @@ public class Handler {
 		if (!Level.moveAgain()) {
 			selected.deselect();
 			selected = null;
+		} else {
+		    selected.moves();
 		}
 		Level.nextTurn();
 	}
