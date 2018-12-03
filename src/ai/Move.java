@@ -2,7 +2,7 @@ package ai;
 
 import java.awt.Point;
 
-public class Move {
+public class Move implements Comparable<Move>{
     private final Point piece;
     private final Point move;
     private int score;
@@ -13,6 +13,7 @@ public class Move {
         this.score = score;
     }
     
+    //returns null if placing piece
     public Point getPiece() {
         return piece;
     }
@@ -23,5 +24,9 @@ public class Move {
     
     public int getScore() {
         return score;
+    }
+
+    public int compareTo(Move m) {
+        return score - m.getScore();
     }
 }

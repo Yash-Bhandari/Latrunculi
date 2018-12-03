@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class Board extends GameObject implements Cloneable {
+public class Board extends GameObject implements Cloneable, Iterable<Point> {
 
     private final int SQUARESIZE = 100;
     private final int XOFFSET = 50;
@@ -124,16 +125,16 @@ public class Board extends GameObject implements Cloneable {
             if (centre.isEnemy(above) && centre.isEnemy(below))
                 return true;
             // on left edge with two enemies around
-            if (x == 0 && centre.isEnemy(right) && (centre.isEnemy(above) || centre.isEnemy(below)))
+            if (x == 0 && centre.isEnemy(right) && ((centre.isEnemy(above) || centre.isEnemy(below))))
                 return true;
             // on right edge with two enemies around
-            if (x == XDIM - 1 && centre.isEnemy(left) && (centre.isEnemy(above) || centre.isEnemy(below)))
+            if (x == XDIM - 1 && centre.isEnemy(left) && ((centre.isEnemy(above) || centre.isEnemy(below))))
                 return true;
             // on top edge with two enemies around
-            if (y == 0 && centre.isEnemy(below) && (centre.isEnemy(left) || centre.isEnemy(right)))
+            if (y == 0 && centre.isEnemy(below) && ((centre.isEnemy(left) || centre.isEnemy(right))))
                 return true;
             // on bottom edge with two enemies around
-            if (x == YDIM - 1 && centre.isEnemy(above) && (centre.isEnemy(left) || centre.isEnemy(right)))
+            if (y == YDIM - 1 && centre.isEnemy(above) && ((centre.isEnemy(left) || centre.isEnemy(right))))
                 return true;
         }
         return false;
@@ -242,11 +243,11 @@ public class Board extends GameObject implements Cloneable {
         return board[p.x][p.y];
     }
 
-    public int getxDim() {
+    public int getXDim() {
         return XDIM;
     }
 
-    public int getyDim() {
+    public int getYDim() {
         return YDIM;
     }
 
@@ -328,4 +329,29 @@ public class Board extends GameObject implements Cloneable {
             return null;
         return new Point(p.x, p.y + 1);
     }
+
+    @Override
+    public Iterator<Point> iterator() {
+        return new Iterator<Point>() {
+            int x = 0;
+            int y = 0;
+
+            @Override
+            public boolean hasNext() {
+                return y < getYDim();
+            }
+
+            @Override
+            public Point next() {
+                Point next = new Point(x++, y);
+                if (x >= getXDim()) {
+                    x = 0;
+                    y++;
+                }
+                return next;
+            }
+
+        };
+    }
+    
 }

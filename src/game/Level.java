@@ -43,6 +43,8 @@ public class Level {
             phase++;
             turn = 1;
         }
+        System.out.println("it is turn " + turn);
+
     }
 
     public static void nextTurn() {

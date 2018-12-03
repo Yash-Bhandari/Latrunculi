@@ -24,6 +24,7 @@ public class Handler {
     private boolean movePiece;
     private MouseEvent lastClick;
     private Point toSelect;
+    private GameObject last;
 
     public Handler(Input input) {
         objects = new LinkedList<GameObject>();
@@ -31,6 +32,7 @@ public class Handler {
     }
 
     public void add(GameObject go) {
+        last = go;
         if (go instanceof Board)
             board = (Board) go;
         objects.add(go);
@@ -39,21 +41,37 @@ public class Handler {
     public void updateObjects() {
 
         // ai
-        if (Level.getPhase() == 1 && Level.getTurn() == Level.getAITeam()) {
-            Move move;
-            if (!Level.moveAgain()) {
-                move = AI.bestMove(board, Level.getAITeam());
-            } else {
-                move = AI.bestMove(selected.getPoint(), board, Level.getAITeam());
+        if (Level.getAITeam() == Level.getTurn()) {
+            // moving a piece
+            if (Level.getPhase() == 1) {
+                System.out.println("moved");
+                Move move;
+                if (!Level.moveAgain()) {
+                    move = AI.bestMove(board, Level.getAITeam());
+                } else {
+                    move = AI.bestMove(selected.getPoint(), board, Level.getAITeam());
+                }
+                System.out.println("score of " + move.getScore());
+                board.move(move.getPiece(), move.getMove());
+                if (board.update(move.getMove(), true) > 0) {
+                    Level.tookPiece();
+                } else
+                    Level.noTake();
+                selected = board.pieceAt(move.getMove());
+                board.print();
+                endTurn();
             }
-            System.out.println("score of " + move.getScore());
-            board.move(move.getPiece(), move.getMove());
-            if (board.update(move.getMove(), true) > 0) {
-                Level.tookPiece();
-            } else
-                Level.noTake();
-            selected = board.pieceAt(move.getMove());
-            endTurn();
+            // placing a piece
+            if (Level.getPhase() == 0) {
+                if (Level.isDux())
+                    add(new Dux(board, Level.getTurn(), AI.bestPlace(Level.isDux(), board, Level.getTurn())));
+                else
+                    add(new Piece(board, Level.getTurn(), AI.bestPlace(Level.isDux(), board, Level.getTurn())));
+                board.addPiece((Piece) last, ((Piece) last).getPoint());
+                Level.added(Level.getTurn());
+                System.out.println("put one down");
+            }
+
         }
 
         // piece placing phase
@@ -153,7 +171,7 @@ public class Handler {
     }
 
     public void clear() {
-        board = new Board(board.getxDim(), board.getyDim());
+        board = new Board(board.getXDim(), board.getYDim());
         objects.clear();
         add(board);
     }

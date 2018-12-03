@@ -50,11 +50,11 @@ public class Piece extends GameObject {
 		moves = new ArrayList<Point>();
 		if (point.x > 0 && board.pieceAt(point.x - 1, point.y) == null)
 			moves.add(board.left(point));
-		if (point.x < board.getxDim() - 1 && board.pieceAt(point.x + 1, point.y) == null)
+		if (point.x < board.getXDim() - 1 && board.pieceAt(point.x + 1, point.y) == null)
 			moves.add(board.right(point));
 		if (point.y > 0 && board.pieceAt(point.x, point.y - 1) == null)
 			moves.add(board.above(point));
-		if (point.y < board.getyDim() - 1 && board.pieceAt(point.x, point.y + 1) == null)
+		if (point.y < board.getYDim() - 1 && board.pieceAt(point.x, point.y + 1) == null)
 			moves.add(board.below(point));
 		return (ArrayList<Point>) moves.clone();
 	}
