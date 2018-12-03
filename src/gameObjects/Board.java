@@ -66,30 +66,38 @@ public class Board extends GameObject implements Cloneable {
 
     }
 
-    //performs capture logic on pieces immediately adjacent to given point
-    //returns the number of pieces captured 
-    public int update(Point moved) {
-        print();
+    // performs capture logic on pieces immediately adjacent to given point
+    // pieces will only actually be removed if remove is set to true
+    // returns the number of pieces captured
+    public int update(Point moved, boolean remove) {
         Point p = moved;
         int taken = 0;
         if ((p = left(moved)) != null && flanked(p.x, p.y)) {
-            toRemove.add(pieceAt(p));
-            removePiece(p);
+            if (remove) {
+                toRemove.add(pieceAt(p));
+                removePiece(p);
+            }
             taken++;
         }
         if ((p = right(moved)) != null && flanked(p.x, p.y)) {
-            toRemove.add(pieceAt(p));
-            removePiece(p);
+            if (remove) {
+                toRemove.add(pieceAt(p));
+                removePiece(p);
+            }
             taken++;
         }
         if ((p = above(moved)) != null && flanked(p.x, p.y)) {
-            toRemove.add(pieceAt(p));
-            removePiece(p);
+            if (remove) {
+                toRemove.add(pieceAt(p));
+                removePiece(p);
+            }
             taken++;
         }
         if ((p = below(moved)) != null && flanked(p.x, p.y)) {
-            toRemove.add(pieceAt(p));
-            removePiece(p);
+            if (remove) {
+                toRemove.add(pieceAt(p));
+                removePiece(p);
+            }
             taken++;
         }
         return taken;
@@ -132,26 +140,42 @@ public class Board extends GameObject implements Cloneable {
     }
 
     public void addPiece(Piece piece, Point p) {
-        if (piece.getTeam() == 1)
-            numRed++;
-        if (piece.getTeam() == 2)
-            numBlue++;
+        if (piece != null) {
+            if (piece.getTeam() == 1)
+                numRed++;
+            if (piece.getTeam() == 2)
+                numBlue++;
+        }
+        board[p.x][p.y] = piece;
+    }
+
+    public void setPiece(Piece piece, Point p) {
         board[p.x][p.y] = piece;
     }
 
     public void removePiece(Point p) {
-        if (board[p.x][p.y].getTeam() == 1)
-            numRed--;
-        if (board[p.x][p.y].getTeam() == 2)
-            numBlue--;
+        if (pieceAt(p) != null) {
+            if (board[p.x][p.y].getTeam() == 1)
+                numRed--;
+            if (board[p.x][p.y].getTeam() == 2)
+                numBlue--;
+        }
         board[p.x][p.y] = null;
     }
 
-    // returns a new board after having moved the piece at the original point to a new one.
+    // moves the piece at the first point to the second point
+    public void move(Point piece, Point toMove) {
+        setPiece(pieceAt(piece), toMove);
+        setPiece(null, piece);
+        pieceAt(toMove).move(toMove);
+    }
+
+    // returns a new board after having moved the piece at the original point to a
+    // new one.
     // creates a deep clone
     public Board copyMove(Point original, Point toMove) {
         Board b = clone();
-        
+
         b.addPiece(b.pieceAt(original), toMove);
         b.removePiece(original);
         return b;
@@ -195,14 +219,16 @@ public class Board extends GameObject implements Cloneable {
         numRed = 0;
         numBlue = 0;
     }
-    
-    //returns a deep clone of the current board
+
+    // returns a deep clone of the current board
     public Board clone() {
         Board b = new Board(XDIM, YDIM);
         for (int i = 0; i < XDIM; i++) {
-            for (int j =0; j < YDIM; j++) {
+            for (int j = 0; j < YDIM; j++) {
                 Point p = new Point(i, j);
-                if (b.pieceAt(p) != null) b.addPiece(new Piece(b, b.pieceAt(p).getTeam(), p), p);
+                if (pieceAt(p) != null) {
+                    b.addPiece(new Piece(b, pieceAt(p).getTeam(), p), p);
+                }
             }
         }
         return b;
@@ -240,7 +266,7 @@ public class Board extends GameObject implements Cloneable {
         return SQUARESIZE;
     }
 
-    private void print() {
+    public void print() {
         for (int y = 0; y < board[0].length; y++) {
             for (int x = 0; x < board.length; x++) {
                 if (board[x][y] == null)

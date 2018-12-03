@@ -41,8 +41,6 @@ public class Piece extends GameObject {
 
 	// moves piece to given point
 	public void move(Point p) {
-		board.removePiece(point);
-		board.addPiece(this, p);
 		point = p;
 		moves();
 	}
