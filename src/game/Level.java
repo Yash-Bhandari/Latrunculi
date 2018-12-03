@@ -12,7 +12,7 @@ public class Level {
     private static Handler handler;
     private static boolean moveAgain = false;
     private static boolean ai = false;
-    private static int aiTeam = 2;
+    private static int aiTeam = 0;
     private static int numPieces;
     private static int numDux = 1;
     private static int phase = -1;
