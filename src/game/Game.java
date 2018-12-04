@@ -37,7 +37,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		Game g = new Game();
+		new Game();
 		// Thread thread = new Thread(new Game());
 		// g.start();
 	}
