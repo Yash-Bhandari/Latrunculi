@@ -249,8 +249,8 @@ public class Board extends GameObject implements Cloneable, Iterable<Point> {
             Piece check = pieceAt(square);
             if (check != null && check.getTeam() != piece.getTeam()) {
                 int distance = -1;
-                distance += Math.abs(piece.getPoint().x - check.getPoint().x);
-                distance += Math.abs(piece.getPoint().y - check.getPoint().y);
+                distance += Math.abs(p.x - check.getPoint().x);
+                distance += Math.abs(p.y - check.getPoint().y);
                 if (distance < lowest) lowest = distance;
             }
         }
