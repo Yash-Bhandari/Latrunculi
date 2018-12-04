@@ -9,8 +9,8 @@ public class Piece extends GameObject {
 
 	protected Board board;
 	protected boolean selected;
-	protected Point point;
-	protected int team;
+	private Point point;
+	private int team;
 	protected ArrayList<Point> moves;
 	private Color color;
 

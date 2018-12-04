@@ -18,8 +18,8 @@ public class Dux extends Piece {
 		super.render(g);
 		g.setColor(special);
 		int offset = board.getSquareSize() / 4;
-		int xLocation = board.locationOfSquare(point).x;
-		int yLocation = board.locationOfSquare(point).y;
+		int xLocation = board.locationOfSquare(getPoint()).x;
+		int yLocation = board.locationOfSquare(getPoint()).y;
 		g.fillOval(xLocation + offset, yLocation + offset, offset * 2, offset * 2);
 	}
 	
@@ -27,13 +27,13 @@ public class Dux extends Piece {
 		moves = super.moves();
 		ArrayList<Point> temp = new ArrayList<Point>();
 		for (Point m : moves) {
-			if (m.equals(board.left(point)) && board.left(m) != null && board.pieceAt(board.left(m)) == null)
+			if (m.equals(board.left(getPoint())) && board.left(m) != null && board.pieceAt(board.left(m)) == null)
 				temp.add(board.left(m));
-			if (m.equals(board.right(point)) && board.right(m) != null  && board.pieceAt(board.right(m)) == null) 
+			if (m.equals(board.right(getPoint())) && board.right(m) != null  && board.pieceAt(board.right(m)) == null) 
 				temp.add(board.right(m));
-			if (m.equals(board.above(point)) && board.above(m) != null && board.pieceAt(board.above(m)) == null) 
+			if (m.equals(board.above(getPoint())) && board.above(m) != null && board.pieceAt(board.above(m)) == null) 
 				temp.add(board.above(m));
-			if (m.equals(board.below(point)) && board.below(m) != null && board.pieceAt(board.below(m)) == null)
+			if (m.equals(board.below(getPoint())) && board.below(m) != null && board.pieceAt(board.below(m)) == null)
 				temp.add(board.below(m));
 		}
 		moves.addAll(temp);

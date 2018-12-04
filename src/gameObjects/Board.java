@@ -72,7 +72,7 @@ public class Board extends GameObject implements Cloneable, Iterable<Point> {
     // returns the number of pieces captured
     public int update(Point moved, boolean remove) {
         Point p = moved;
-        int team = pieceAt(p).team;
+        int team = pieceAt(p).getTeam();
         int taken = 0;
         if (pieceAt((p = left(moved))) != null && pieceAt(p).getTeam() != team && flanked(p, moved)) {
             if (remove) {
@@ -236,6 +236,25 @@ public class Board extends GameObject implements Cloneable, Iterable<Point> {
         board = new Piece[XDIM][YDIM];
         numRed = 0;
         numBlue = 0;
+    }
+
+    // returns the distance from the given piece to the nearest enemy piece
+    // returns -1 if an empty square is passed as a parameter
+    public int nearestEnemy(Point p) {
+        Piece piece = pieceAt(p);
+        if (piece == null)
+            return -1;
+        int lowest = XDIM + YDIM;
+        for (Point square : this) {
+            Piece check = pieceAt(square);
+            if (check != null && check.getTeam() != piece.getTeam()) {
+                int distance = -1;
+                distance += Math.abs(piece.getPoint().x - check.getPoint().x);
+                distance += Math.abs(piece.getPoint().y - check.getPoint().y);
+                if (distance < lowest) lowest = distance;
+            }
+        }
+        return lowest;
     }
 
     // returns a deep clone of the current board
