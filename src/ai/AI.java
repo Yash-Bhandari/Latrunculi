@@ -15,6 +15,7 @@ import gameObjects.Piece;
 public class AI {
 
     // private final int samePiece = 2;
+    private static final int captureBonus = 3;
 
     // finds the best moves when any piece can be moved and randomly returns one
     // from them
@@ -30,8 +31,9 @@ public class AI {
         bestMoves.add(pq.remove());
         while (pq.peek() != null && bestMoves.get(0).getScore() == pq.peek().getScore())
             bestMoves.add(pq.remove());
-        Random r = new Random();
-        return bestMoves.get(r.nextInt(bestMoves.size()));
+        //Random r = new Random();
+        //return bestMoves.get(r.nextInt(bestMoves.size()));
+        return lowestDistance(bestMoves);
     }
 
     // finds the best moves when a specific piece needs to be moved and randomly
@@ -41,15 +43,16 @@ public class AI {
         for (Point move : b.pieceAt(piece).moves()) {
             Board newBoard = b.copyMove(piece, move);
             int score = score(move, newBoard, team, false);
-            pq.add(new Move(piece, move, score));
+            pq.add(new Move(piece, move, score, b));
         }
         ArrayList<Move> bestMoves = new ArrayList<>();
         if (pq.peek() != null)
             bestMoves.add(pq.remove());
         while (pq.peek() != null && bestMoves.get(0).getScore() == pq.peek().getScore())
             bestMoves.add(pq.remove());
-        Random r = new Random();
-        return bestMoves.get(r.nextInt(bestMoves.size()));
+        //Random r = new Random();
+        //return bestMoves.get(r.nextInt(bestMoves.size()));
+        return lowestDistance(bestMoves);
     }
 
     // finds the best spots to place a piece and randomly returns one from them
@@ -61,7 +64,7 @@ public class AI {
                 if (dux)
                     temp.addPiece(new Dux(temp, team, square), square);
                 temp.addPiece(new Piece(temp, team, square), square);
-                pq.add(new Move(null, square, score(square, temp, team, true)));
+                pq.add(new Move(null, square, score(square, temp, team, true), b));
             }
         }
         ArrayList<Move> bestSpots = new ArrayList<>();
@@ -77,7 +80,7 @@ public class AI {
     // that are within one turn of being taken minus allied pieces that are within
     // one turn of being taken.
     private static int score(Point movedPiece, Board b, int team, boolean placing) {
-        int score = placing ? 0 : b.update(movedPiece, false) * 3;
+        int score = placing ? 0 : b.update(movedPiece, false) * captureBonus;
         boolean capture = score > 0 ? true : false;
         for (int i = 0; i < b.getXDim(); i++) {
             for (int j = 0; j < b.getYDim(); j++) {
@@ -92,5 +95,17 @@ public class AI {
             }
         }
         return score;
+    }
+
+    private static Move lowestDistance(ArrayList<Move> moves) {
+        Move out = null;
+        int lowestDistanceChange = 3;
+        for (Move move : moves) {
+           if (move.getDistanceChange() < lowestDistanceChange) {
+               out = move;
+               lowestDistanceChange = move.getDistanceChange();
+           }
+        }
+        return out;
     }
 }
