@@ -12,7 +12,8 @@ public class Level {
     private static Handler handler;
     private static boolean moveAgain = false;
     private static boolean ai = false;
-    private static int aiTeam = 0;
+    //set this to 0 for no ai
+    private static int aiTeam = 1;
     private static int numPieces;
     private static int numDux = 1;
     private static int phase = -1;

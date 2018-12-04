@@ -44,7 +44,8 @@ public class AI {
             pq.add(new Move(piece, move, score));
         }
         ArrayList<Move> bestMoves = new ArrayList<>();
-        bestMoves.add(pq.remove());
+        if (pq.peek() != null)
+            bestMoves.add(pq.remove());
         while (pq.peek() != null && bestMoves.get(0).getScore() == pq.peek().getScore())
             bestMoves.add(pq.remove());
         Random r = new Random();
