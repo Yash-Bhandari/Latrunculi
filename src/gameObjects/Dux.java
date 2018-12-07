@@ -18,8 +18,8 @@ public class Dux extends Piece {
 		super.render(g);
 		g.setColor(special);
 		int offset = board.getSquareSize() / 4;
-		int xLocation = board.locationOfSquare(getPoint()).x;
-		int yLocation = board.locationOfSquare(getPoint()).y;
+		int xLocation = board.locationOfSquare(this.getPoint()).x;
+		int yLocation = board.locationOfSquare(this.getPoint()).y;
 		g.fillOval(xLocation + offset, yLocation + offset, offset * 2, offset * 2);
 	}
 	
