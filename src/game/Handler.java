@@ -99,7 +99,7 @@ public class Handler {
                 }
                 selected = board.pieceAt(board.squareAtLocation(lastClick.getPoint()));
                 selected.select();
-                System.out.println("the nearest enemy is " + board.nearestEnemy(selected.getPoint()) + " away");
+                //System.out.println("the nearest enemy is " + board.nearestEnemy(selected.getPoint()) + " away");
             }
             selectPiece = false;
         }

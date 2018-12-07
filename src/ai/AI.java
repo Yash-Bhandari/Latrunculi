@@ -2,6 +2,7 @@ package ai;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -31,9 +32,8 @@ public class AI {
 		bestMoves.add(pq.remove());
 		while (pq.peek() != null && bestMoves.get(0).getScore() == pq.peek().getScore())
 			bestMoves.add(pq.remove());
-		// Random r = new Random();
-		// return bestMoves.get(r.nextInt(bestMoves.size()));
-		return lowestDistance(bestMoves, b);
+		Random r = new Random();
+		return bestMoves.get(r.nextInt(bestMoves.size()));
 	}
 
 	// finds the best moves when a specific piece needs to be moved and randomly
@@ -48,13 +48,13 @@ public class AI {
 		ArrayList<Move> bestMoves = new ArrayList<>();
 		if (pq.peek() != null)
 			bestMoves.add(pq.remove());
-		while (pq.peek() != null && bestMoves.get(0).getScore() == pq.peek().getScore())
+		while (pq.peek() != null && bestMoves.get(0).compareTo(pq.peek()) == 0) {
 			bestMoves.add(pq.remove());
-		// Random r = new Random();
-		// return bestMoves.get(r.nextInt(bestMoves.size()));
-		return lowestDistance(bestMoves, b);
+		}
+		Random r = new Random();
+		return bestMoves.get(r.nextInt(bestMoves.size()));
 	}
-
+		
 	// finds the best spots to place a piece and randomly returns one from them
 	public static Point bestPlace(boolean dux, Board b, int team) {
 		PriorityQueue<Move> pq = new PriorityQueue<>(5, java.util.Collections.reverseOrder());
@@ -117,11 +117,13 @@ public class AI {
 		Piece blue = new Piece(b, 2, new Point(0, 2));
 		b.addPiece(red, new Point(0, 0));
 		b.addPiece(blue, new Point(0, 2));
-		b.print();
-		Move m = new Move(blue.getPoint(), new Point(0, 1), 5, b);
-		System.out.println(b.nearestEnemy(blue.getPoint()));
-		Board after = b.copyMove(m.getPiece(), m.getMove());
-		after.print();
-		System.out.println(after.nearestEnemy(m.getMove()));
+		//b.print();
+		ArrayList<Move> moves = new ArrayList<Move>();
+		moves.add(new Move(blue.getPoint(), new Point(0, 1), 5, b));
+		moves.add(new Move(blue.getPoint(), new Point(1, 2), 5, b));
+		//System.out.println(b.nearestEnemy(blue.getPoint()));
+		Board after = b.copyMove(moves.get(0).getPiece(), moves.get(0).getMove());
+		//after.print();
+		//System.out.println(after.nearestEnemy(m.getMove()));
 	}
 }

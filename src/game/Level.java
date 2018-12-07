@@ -44,7 +44,7 @@ public class Level {
             phase++;
             turn = 1;
         }
-        System.out.println("it is turn " + turn);
+        //System.out.println("it is turn " + turn);
 
     }
 
