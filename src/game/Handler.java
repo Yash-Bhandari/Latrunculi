@@ -44,14 +44,12 @@ public class Handler {
         if (Level.getAITeam() == Level.getTurn()) {
             // moving a piece
             if (Level.getPhase() == 1) {
-                System.out.println("moved");
                 Move move;
                 if (!Level.moveAgain()) {
                     move = AI.bestMove(board, Level.getAITeam());
                 } else {
                     move = AI.bestMove(selected.getPoint(), board, Level.getAITeam());
                 }
-                System.out.println("score of " + move.getScore());
                 board.move(move.getPiece(), move.getMove());
                 if (board.update(move.getMove(), true) > 0) {
                     Level.tookPiece();
@@ -69,7 +67,6 @@ public class Handler {
                     add(new Piece(board, Level.getTurn(), AI.bestPlace(Level.isDux(), board, Level.getTurn())));
                 board.addPiece((Piece) last, ((Piece) last).getPoint());
                 Level.added(Level.getTurn());
-                System.out.println("put one down");
             }
 
         }
@@ -102,6 +99,7 @@ public class Handler {
                 }
                 selected = board.pieceAt(board.squareAtLocation(lastClick.getPoint()));
                 selected.select();
+                //System.out.println("the nearest enemy is " + board.nearestEnemy(selected.getPoint()) + " away");
             }
             selectPiece = false;
         }
