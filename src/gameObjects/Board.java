@@ -109,7 +109,6 @@ public class Board extends GameObject implements Cloneable, Iterable<Point> {
     public boolean flanked(Point attacked, Point attacker) {
         attacker = pieceAt(attacker).getPoint();
         Piece centre = pieceAt(attacked);
-        boolean involvesAttacker = false;
         if (centre != null) {
 
             Piece left, right, above, below;
