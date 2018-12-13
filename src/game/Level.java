@@ -13,7 +13,7 @@ public class Level {
     private static boolean moveAgain = false;
     private static boolean ai = false;
     //set this to 0 for no ai
-    private static int aiTeam = 1;
+    private static int aiTeam = 0;
     private static int numPieces;
     private static int numDux = 1;
     private static int phase = -1;
@@ -44,7 +44,7 @@ public class Level {
             phase++;
             turn = 1;
         }
-        System.out.println("it is turn " + turn);
+        //System.out.println("it is turn " + turn);
 
     }
 

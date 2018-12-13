@@ -7,10 +7,16 @@ import java.util.ArrayList;
 
 public class Piece extends GameObject {
 
+	// time it takes for a piece to move in update ticks (60/s)
+	private final int MOVETIME = 45;
+
 	protected Board board;
 	protected boolean selected;
 	protected Point point;
+	private Point change;
+	private Point screenLocation;
 	protected int team;
+	private int moveProgress;
 	protected ArrayList<Point> moves;
 	private Color color;
 
@@ -18,13 +24,15 @@ public class Piece extends GameObject {
 		this.board = board;
 		point = p;
 		this.team = team;
+		screenLocation = board.locationOfSquare(point);
+		moveProgress = 0;
 	}
-	
+
 	public void render(Graphics g) {
+		updateLocation();
 		g.setColor(team == 1 ? Color.red : Color.blue);
-		g.fillOval(board.locationOfSquare(point).x, board.locationOfSquare(point).y, board.getSquareSize(),
-				board.getSquareSize());
-		if (selected)
+		g.fillOval(screenLocation.x, screenLocation.y, board.getSquareSize(), board.getSquareSize());
+		if (selected && !isMoving())
 			renderMoves(g);
 	}
 
@@ -39,8 +47,32 @@ public class Piece extends GameObject {
 		}
 	}
 
-	// moves piece to given point
+	private void updateLocation() {
+		if (isMoving() && moveProgress <= MOVETIME) {
+			screenLocation = board.locationOfSquare(point);
+			screenLocation.x += (board.getSquareSize() * moveProgress * change.x) / MOVETIME;
+			screenLocation.y += (board.getSquareSize() * moveProgress * change.y) / MOVETIME;
+			moveProgress++;
+		}
+		if (moveProgress > MOVETIME) {
+			moveProgress = 0;
+			point.x += change.x;
+			point.y += change.y;
+			moves();
+		}
+
+	}
+
+	// starts moving piece to given point, moves() will be called once it completes
+	// animation
 	public void move(Point p) {
+		change = new Point(p.x - point.x, p.y - point.y);
+		moveProgress = 1;
+		// moves();
+	}
+
+	// moves a piece immediately with no animation
+	public void moveNoAnimation(Point p) {
 		point = p;
 		moves();
 	}
@@ -78,10 +110,6 @@ public class Piece extends GameObject {
 		return piece == null ? false : piece.team != this.team;
 	}
 
-	private void remove() {
-		inPlay = false;
-	}
-
 	public Point getPoint() {
 		return point;
 	}
@@ -89,5 +117,16 @@ public class Piece extends GameObject {
 	public int getTeam() {
 		return team;
 	}
-
+	
+	/*
+	 * Returns true if the piece is currently in the process of moving
+	 */
+	public boolean isMoving() {
+		return moveProgress > 0;
+	}
+	
+	protected Point getLocation() {
+		return screenLocation;
+	}
+	
 }

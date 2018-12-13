@@ -32,7 +32,7 @@ public class Game extends Canvas implements Runnable {
 		System.out.println("i just made a handler");
 		this.addKeyListener(input);
 		this.addMouseListener(input);
-		Level.startLevel(this, 7, 7, 9);
+		Level.startLevel(this, 7, 7, 2);
 		start();
 	}
 
