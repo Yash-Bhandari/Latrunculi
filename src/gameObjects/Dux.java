@@ -18,13 +18,7 @@ public class Dux extends Piece {
 		super.render(g);
 		g.setColor(special);
 		int offset = board.getSquareSize() / 4;
-<<<<<<< HEAD
-		int xLocation = board.locationOfSquare(this.getPoint()).x;
-		int yLocation = board.locationOfSquare(this.getPoint()).y;
-		g.fillOval(xLocation + offset, yLocation + offset, offset * 2, offset * 2);
-=======
 		g.fillOval(getLocation().x + offset, getLocation().y + offset, offset * 2, offset * 2);
->>>>>>> animated-moves
 	}
 	
 	public ArrayList<Point> moves() {

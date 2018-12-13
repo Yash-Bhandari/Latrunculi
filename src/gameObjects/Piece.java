@@ -12,16 +12,11 @@ public class Piece extends GameObject {
 
 	protected Board board;
 	protected boolean selected;
-<<<<<<< HEAD
-	private Point point;
-	private int team;
-=======
 	protected Point point;
 	private Point change;
 	private Point screenLocation;
 	protected int team;
 	private int moveProgress;
->>>>>>> animated-moves
 	protected ArrayList<Point> moves;
 	private Color color;
 

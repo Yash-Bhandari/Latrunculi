@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import gameObjects.Board;
+import gameObjects.Piece;
 
 public class Level {
 
@@ -13,7 +14,7 @@ public class Level {
     private static boolean moveAgain = false;
     private static boolean ai = false;
     //set this to 0 for no ai
-    private static int aiTeam = 0;
+    private static int aiTeam = 2;
     private static int numPieces;
     private static int numDux = 1;
     private static int phase = -1;

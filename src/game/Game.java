@@ -32,11 +32,7 @@ public class Game extends Canvas implements Runnable {
 		System.out.println("i just made a handler");
 		this.addKeyListener(input);
 		this.addMouseListener(input);
-<<<<<<< HEAD
-		Level.startLevel(this, 7, 7, 3);
-=======
-		Level.startLevel(this, 7, 7, 2);
->>>>>>> animated-moves
+		Level.startLevel(this, 7, 7, 8);
 		start();
 	}
 
