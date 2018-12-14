@@ -24,14 +24,9 @@ public class Button {
 		this.label = label;
 	}
 	
-	public Button(Point location, int fontSize, String label) {
-		this.location = location;
-		this.size = size;
-		this.label = label;
-	}
-	
 	public void render(Graphics g) {
-		int textSize = g.getFontMetrics().stringWidth(label);
+		g.drawRect(location.x, location.y, (int)size.getWidth(), (int)size.getHeight());
+		g.drawString(label, location.x, location.y);
 	}
 	
 	
