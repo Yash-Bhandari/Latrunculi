@@ -51,11 +51,11 @@ public class Level {
 
     public static void nextTurn() {
         if (phase == 1) {
-            if (handler.getBoard().numRed() == 1) {
+            if (handler.getBoard().numRed() <= 1) {
                 phase = 2;
                 winner = 2;
                 handler.deselect();
-            } else if (handler.getBoard().numBlue() == 1) {
+            } else if (handler.getBoard().numBlue() <= 1) {
                 phase = 2;
                 winner = 1;
                 handler.deselect();
