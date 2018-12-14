@@ -22,7 +22,6 @@ public class AI {
 	// from them
 	public static Move bestMove(Board b, int team) {
 		PriorityQueue<Move> pq = new PriorityQueue<>(5, java.util.Collections.reverseOrder());
-		Move bestMove = null;
 		for (Point p : b) {
 			if (b.pieceAt(p) != null && b.pieceAt(p).getTeam() == team) {
 				Move m = bestMove(p, b, team);
@@ -50,15 +49,18 @@ public class AI {
 		ArrayList<Move> bestMoves = new ArrayList<>();
 		if (pq.peek() != null)
 			bestMoves.add(pq.remove());
-		else 
-		    return null;
+		else
+			return null;
 		while (pq.peek() != null && bestMoves.get(0).compareTo(pq.peek()) == 0) {
 			bestMoves.add(pq.remove());
 		}
 		Random r = new Random();
-		return bestMoves.get(r.nextInt(bestMoves.size()));
+		if (!bestMoves.isEmpty())
+			return bestMoves.get(r.nextInt(bestMoves.size()));
+		else
+			return null;
 	}
-		
+
 	// finds the best spots to place a piece and randomly returns one from them
 	public static Point bestPlace(boolean dux, Board b, int team) {
 		PriorityQueue<Move> pq = new PriorityQueue<>(5, java.util.Collections.reverseOrder());
