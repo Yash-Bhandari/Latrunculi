@@ -25,7 +25,6 @@ public class AI {
 		Move bestMove = null;
 		for (Point p : b) {
 			if (b.pieceAt(p) != null && b.pieceAt(p).getTeam() == team) {
-				pq.add(bestMove(p, b, team));
 				Move m = bestMove(p, b, team);
 				if (m != null)
 					pq.add(bestMove(p, b, team));
@@ -51,6 +50,8 @@ public class AI {
 		ArrayList<Move> bestMoves = new ArrayList<>();
 		if (pq.peek() != null)
 			bestMoves.add(pq.remove());
+		else 
+		    return null;
 		while (pq.peek() != null && bestMoves.get(0).compareTo(pq.peek()) == 0) {
 			bestMoves.add(pq.remove());
 		}
